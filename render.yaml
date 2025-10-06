@@ -33,4 +33,3 @@ services:
   - fromGroup: jp7an-timing
   - key: NODE_ENV
     value: production
-    
