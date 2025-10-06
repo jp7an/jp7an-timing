@@ -14,14 +14,9 @@ services:
   startCommand: npm start
   healthCheckPath: /health
   envVars:
+  - fromGroup: jp7an-timing
   - key: NODE_ENV
     value: production
-  - key: DATABASE_URL
-    fromSecret: DATABASE_URL
-  - key: ADMIN_PASSWORD
-    fromSecret: ADMIN_PASSWORD
-  - key: GATEWAY_HMAC_SECRET
-    fromSecret: GATEWAY_HMAC_SECRET
 
 - type: web
   name: jp7an-timing-web
@@ -35,7 +30,6 @@ services:
     npm run build
   startCommand: npm start
   envVars:
+  - fromGroup: jp7an-timing
   - key: NODE_ENV
     value: production
-  - key: NEXT_PUBLIC_API_URL
-    fromSecret: NEXT_PUBLIC_API_URL
