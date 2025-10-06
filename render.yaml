@@ -1,0 +1,41 @@
+services:
+- type: web
+  name: jp7an-timing-api
+  env: node
+  region: frankfurt
+  plan: free
+  autoDeploy: true
+  rootDir: apps/api
+  buildCommand: |
+    npm ci
+    npx prisma generate --schema ../../prisma/schema.prisma
+    npx prisma migrate deploy --schema ../../prisma/schema.prisma
+    npm run build
+  startCommand: npm start
+  healthCheckPath: /health
+  envVars:
+  - key: NODE_ENV
+    value: production
+  - key: DATABASE_URL
+    fromSecret: DATABASE_URL
+  - key: ADMIN_PASSWORD
+    fromSecret: ADMIN_PASSWORD
+  - key: GATEWAY_HMAC_SECRET
+    fromSecret: GATEWAY_HMAC_SECRET
+
+- type: web
+  name: jp7an-timing-web
+  env: node
+  region: frankfurt
+  plan: free
+  autoDeploy: true
+  rootDir: apps/web
+  buildCommand: |
+    npm ci
+    npm run build
+  startCommand: npm start
+  envVars:
+  - key: NODE_ENV
+    value: production
+  - key: NEXT_PUBLIC_API_URL
+    fromSecret: NEXT_PUBLIC_API_URL
