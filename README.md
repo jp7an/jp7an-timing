@@ -75,6 +75,13 @@ Tips: Du kan även köra webben på Vercel (gratis), sätt då NEXT_PUBLIC_API_U
 - Speakerview: /live/{event-slug}/speakerview
 - För tidslopp: aktivera “senaste varvningar överst”-läge direkt i livekomponenten (standard för tidsloppsskärmen 20 m efter mattan)
 
+
+## Tävlingsklasser (Class Management)
+- Hantera tävlingsklasser för varje event via: `/admin/event/{eventId}/classes`
+- Skapa klasser med namn, typ (distans/varv/tid/annat), värde och beskrivning
+- Exempel: "10 km" (distans: 10000 m), "M21" (åldersklass), "100 varv" (varv: 100)
+- Full CRUD via API: GET/POST/PUT/DELETE `/event/:eventId/class[/:classId]`
+- Se TEST_INSTRUCTIONS.md och FEATURES.md för detaljerad info
 ## Anmälan & betalning (översikt)
 - Obligatoriskt: förnamn, efternamn, kön (M/K), födelsedatum, e‑post, nationalitet (ISO3), klubb valfri
 - Swish QR: alias + anmälningsnummer i meddelande (admin ställer pris). Manuell verifiering i admin.
