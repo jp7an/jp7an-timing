@@ -157,6 +157,96 @@ app.get("/exports/:slug/sfa", async (req, res) => {
   res.send(csv);
 });
 
+// ===== Class Management API =====
+
+// List all classes for an event
+app.get("/event/:eventId/class", async (req, res) => {
+  const { eventId } = req.params;
+  const ev = await prisma.event.findUnique({ where: { id: eventId } });
+  if (!ev) return res.status(404).json({ error: "Event not found" });
+
+  const classes = await prisma.class.findMany({
+    where: { eventId },
+    orderBy: { createdAt: "asc" }
+  });
+  res.json(classes);
+});
+
+// Create a new class
+app.post("/event/:eventId/class", async (req, res) => {
+  const { eventId } = req.params;
+  const { name, type, value, description } = req.body || {};
+  
+  if (!name || !type) {
+    return res.status(400).json({ error: "name and type are required" });
+  }
+
+  const ev = await prisma.event.findUnique({ where: { id: eventId } });
+  if (!ev) return res.status(404).json({ error: "Event not found" });
+
+  const newClass = await prisma.class.create({
+    data: {
+      eventId,
+      name,
+      type,
+      value: value ?? null,
+      description: description ?? null
+    }
+  });
+
+  res.status(201).json(newClass);
+});
+
+// Get a specific class
+app.get("/event/:eventId/class/:classId", async (req, res) => {
+  const { eventId, classId } = req.params;
+  
+  const cls = await prisma.class.findFirst({
+    where: { id: classId, eventId }
+  });
+
+  if (!cls) return res.status(404).json({ error: "Class not found" });
+  res.json(cls);
+});
+
+// Update a class
+app.put("/event/:eventId/class/:classId", async (req, res) => {
+  const { eventId, classId } = req.params;
+  const { name, type, value, description } = req.body || {};
+
+  const cls = await prisma.class.findFirst({
+    where: { id: classId, eventId }
+  });
+
+  if (!cls) return res.status(404).json({ error: "Class not found" });
+
+  const updated = await prisma.class.update({
+    where: { id: classId },
+    data: {
+      name: name ?? cls.name,
+      type: type ?? cls.type,
+      value: value !== undefined ? value : cls.value,
+      description: description !== undefined ? description : cls.description
+    }
+  });
+
+  res.json(updated);
+});
+
+// Delete a class
+app.delete("/event/:eventId/class/:classId", async (req, res) => {
+  const { eventId, classId } = req.params;
+
+  const cls = await prisma.class.findFirst({
+    where: { id: classId, eventId }
+  });
+
+  if (!cls) return res.status(404).json({ error: "Class not found" });
+
+  await prisma.class.delete({ where: { id: classId } });
+  res.status(204).end();
+});
+
 const server = app.listen(process.env.PORT || 3001, () => {
   console.log("API listening");
 });

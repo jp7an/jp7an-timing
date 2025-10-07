@@ -46,6 +46,7 @@ model Event {
   laps            Lap[]
   results         Result[]
   logs            AuditLog[]
+  classes         Class[]
 }
 
 enum EventState {
@@ -115,6 +116,7 @@ model Participant {
 
   registration  Registration?
   results       Result[]
+  laps          Lap[]
 }
 
 enum ParticipantStatus {
@@ -184,4 +186,17 @@ model AuditLog {
   action    String
   payload   Json?
   createdAt DateTime @default(now())
+  event     Event?   @relation(fields: [eventId], references: [id])
+}
+
+model Class {
+  id          String   @id @default(cuid())
+  eventId     String
+  event       Event    @relation(fields: [eventId], references: [id])
+  name        String
+  type        String   // "distance" | "laps" | "time" | "other"
+  value       Int?     // meters for distance, number for laps, seconds for time
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
