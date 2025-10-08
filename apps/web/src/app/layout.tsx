@@ -1,9 +1,10 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import Navbar from '@/components/Navbar'
 
 export const metadata: Metadata = {
-  title: 'JP7AN Timing',
-  description: 'Timing application',
+  title: 'Jp7an-timing',
+  description: 'Professionellt tidtagningssystem för löpning',
 }
 
 export default function RootLayout({
@@ -12,8 +13,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="sv">
+      <body>
+        <Navbar />
+        {children}
+      </body>
     </html>
   )
 }
