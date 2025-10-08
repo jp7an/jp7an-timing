@@ -1,7 +1,0 @@
-{
-  "note": "Install extra deps for import-preview",
-  "dependencies": {
-    "@fast-csv/parse": "^5.0.0",
-    "iconv-lite": "^0.6.3"
-  }
-}
