@@ -1,0 +1,182 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Race mode enum
+enum RaceMode {
+  NORMAL
+  BACKYARD
+  VARVLOPP  // Lap race
+  TIDSLOPP  // Time race
+}
+
+// Gender enum
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+// Payment status enum
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+// Event represents a race event
+model Event {
+  id          String      @id @default(uuid())
+  slug        String      @unique
+  name        String
+  description String?
+  mode        RaceMode
+  date        DateTime
+  location    String?
+  isActive    Boolean     @default(true)
+  
+  // Mode-specific settings (JSON)
+  modeSettings Json?
+  
+  // Relations
+  classes     Class[]
+  participants Participant[]
+  passages    Passage[]
+  auditLogs   AuditLog[]
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  @@index([slug])
+  @@index([isActive])
+}
+
+// Class represents an age/category class in an event
+model Class {
+  id          String      @id @default(uuid())
+  eventId     String
+  name        String      // e.g., "M20-29", "F40-49"
+  description String?
+  minAge      Int?
+  maxAge      Int?
+  gender      Gender?
+  
+  // Relations
+  event       Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  participants Participant[]
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  @@index([eventId])
+  @@unique([eventId, name])
+}
+
+// Participant represents a registered participant
+model Participant {
+  id            String        @id @default(uuid())
+  eventId       String
+  classId       String?
+  
+  // Personal information
+  firstName     String
+  lastName      String
+  email         String
+  gender        Gender
+  birthDate     DateTime
+  club          String?
+  nationality   String        @default("SE")
+  
+  // Registration
+  registrationNumber String   @unique
+  epc           String?       @unique  // Electronic timing chip
+  bib           String?       // Bib number
+  
+  // Payment
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentAmount Decimal?      @db.Decimal(10, 2)
+  swishQR       String?       // Swish QR code data
+  
+  // GDPR
+  gdprConsent   Boolean       @default(false)
+  gdprConsentAt DateTime?
+  
+  // Relations
+  event         Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  class         Class?        @relation(fields: [classId], references: [id], onDelete: SetNull)
+  passages      Passage[]
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  @@index([eventId])
+  @@index([classId])
+  @@index([epc])
+  @@index([bib])
+  @@index([email])
+}
+
+// Passage represents a timing passage (checkpoint crossing)
+model Passage {
+  id            String      @id @default(uuid())
+  eventId       String
+  participantId String
+  
+  // Timing data
+  epc           String      // EPC from RFID reader
+  timestamp     DateTime
+  checkpoint    String?     // Checkpoint identifier
+  lapNumber     Int?        // For lap races
+  
+  // Reader information
+  readerInfo    Json?       // Information from the RFID reader
+  
+  // Validation
+  isValid       Boolean     @default(true)
+  invalidReason String?
+  
+  // Relations
+  event         Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  
+  createdAt     DateTime    @default(now())
+  
+  @@index([eventId])
+  @@index([participantId])
+  @@index([epc])
+  @@index([timestamp])
+  @@index([checkpoint])
+}
+
+// AuditLog for tracking critical changes
+model AuditLog {
+  id          String    @id @default(uuid())
+  eventId     String?
+  
+  // Action details
+  action      String    // e.g., "CREATE_PARTICIPANT", "UPDATE_PASSAGE", "DELETE_CLASS"
+  entityType  String    // e.g., "Participant", "Passage", "Event"
+  entityId    String?
+  
+  // Change details
+  changes     Json?     // What changed
+  performedBy String?   // Who performed the action (e.g., "admin", "system")
+  ipAddress   String?
+  
+  // Relations
+  event       Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime  @default(now())
+  
+  @@index([eventId])
+  @@index([action])
+  @@index([createdAt])
+}
