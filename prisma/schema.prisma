@@ -1,0 +1,204 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum RaceType {
+  NORMAL
+  BACKYARD
+  LAP
+  TIME
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  CONFIRMED
+}
+
+enum ParticipantStatus {
+  REGISTERED
+  CONFIRMED
+  CHECKED_IN
+  STARTED
+  FINISHED
+  DNF
+  DNS
+}
+
+// Events and Races
+model Event {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  date        DateTime
+  location    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  races       Race[]
+  participants Participant[]
+}
+
+model Race {
+  id          String   @id @default(cuid())
+  eventId     String
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  name        String
+  raceType    RaceType
+  startTime   DateTime?
+  
+  // For Normal and Lap races
+  gunStartTime DateTime?
+  chipTimeRequired Boolean @default(false)
+  startToFinishMinTime Int? // Minutes before finish line is active (default 5 for Normal)
+  
+  // For Lap races
+  lapDistance Float? // in meters
+  numberOfLaps Int?
+  
+  // For Time races
+  raceDurationMinutes Int?
+  
+  // For Backyard races
+  backyardLapDistance Float? @default(6706.13645) // in meters
+  backyardLapTimeMinutes Int? @default(60)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  classes     RaceClass[]
+  readings    ChipReading[]
+  results     RaceResult[]
+}
+
+model RaceClass {
+  id          String   @id @default(cuid())
+  raceId      String
+  race        Race     @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  
+  name        String
+  distance    Float?   // in meters for Normal races
+  laps        Int?     // for Lap races
+  timeMinutes Int?     // for Time races
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  participants Participant[]
+}
+
+// Participants and Registration
+model Participant {
+  id              String   @id @default(cuid())
+  eventId         String
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  classId         String?
+  class           RaceClass? @relation(fields: [classId], references: [id])
+  
+  firstName       String
+  lastName        String
+  gender          Gender
+  dateOfBirth     DateTime
+  email           String
+  club            String?
+  nationality     String   @default("SE")
+  
+  bibNumber       Int?     @unique
+  chipEpc         String?  @unique
+  
+  registrationNumber String @unique
+  paymentStatus   PaymentStatus @default(PENDING)
+  status          ParticipantStatus @default(REGISTERED)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  readings        ChipReading[]
+  results         RaceResult[]
+}
+
+// RFID Chip Readings
+model ChipReading {
+  id          String   @id @default(cuid())
+  raceId      String
+  race        Race     @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  participantId String
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  
+  chipEpc     String
+  timestamp   DateTime
+  antennaId   Int?
+  rssi        Float?
+  
+  lapNumber   Int?     // For lap-based races
+  isStart     Boolean  @default(false)
+  isFinish    Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([raceId, participantId])
+  @@index([timestamp])
+}
+
+// Race Results
+model RaceResult {
+  id              String   @id @default(cuid())
+  raceId          String
+  race            Race     @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  participantId   String
+  participant     Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  
+  // Times
+  gunTime         Int?     // in milliseconds
+  chipTime        Int?     // in milliseconds
+  
+  // Placement
+  overallPlace    Int?
+  genderPlace     Int?
+  classPlace      Int?
+  
+  // Lap data
+  totalLaps       Int?
+  totalDistance   Float?   // in meters
+  lapTimes        Json?    // Array of lap times
+  
+  // Calculated stats
+  averagePace     Float?   // min/km
+  averageSpeed    Float?   // km/h
+  
+  status          ParticipantStatus
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@unique([raceId, participantId])
+  @@index([raceId, overallPlace])
+}
+
+// System Configuration
+model SystemConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
