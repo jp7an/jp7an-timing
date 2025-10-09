@@ -6,6 +6,7 @@ import { adminApi, setAuthToken } from '@/lib/api';
 
 export default function AdminLogin() {
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function AdminLogin() {
 
     try {
       const response = await adminApi.login(password);
-      setAuthToken(response.data.token);
+      setAuthToken(response.data.token, rememberMe);
       router.push('/admin/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Inloggning misslyckades');
@@ -49,6 +50,18 @@ export default function AdminLogin() {
               required
               autoFocus
             />
+          </div>
+
+          <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                style={{ marginRight: '0.5rem' }}
+              />
+              <span>Håll mig inloggad i 14 dagar</span>
+            </label>
           </div>
 
           <button 
