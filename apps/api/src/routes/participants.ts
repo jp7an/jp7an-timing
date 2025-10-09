@@ -78,8 +78,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Search participants by EPC or Bib
-router.get('/search/:query', async (req, res) => {
+// Search participants by EPC or Bib (admin only for chip distribution)
+router.get('/search/:query', adminAuth, async (req, res) => {
   try {
     const query = req.params.query;
     

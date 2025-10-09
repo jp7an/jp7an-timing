@@ -11,13 +11,17 @@ router.post('/login', (req, res) => {
     return res.status(500).json({ error: 'Admin-lösenord inte konfigurerat' });
   }
 
-  if (password !== adminPassword) {
+  // Trim whitespace from both passwords before comparison
+  const trimmedPassword = password?.trim();
+  const trimmedAdminPassword = adminPassword.trim();
+
+  if (!trimmedPassword || trimmedPassword !== trimmedAdminPassword) {
     return res.status(401).json({ error: 'Felaktigt lösenord' });
   }
 
   // Return the password as token (simple auth for MVP)
   res.json({
-    token: password,
+    token: trimmedPassword,
     message: 'Inloggning lyckades',
   });
 });
@@ -31,7 +35,11 @@ router.post('/verify', (req, res) => {
     return res.status(500).json({ error: 'Admin-lösenord inte konfigurerat' });
   }
 
-  if (token !== adminPassword) {
+  // Trim whitespace from both tokens before comparison
+  const trimmedToken = token?.trim();
+  const trimmedAdminPassword = adminPassword.trim();
+
+  if (!trimmedToken || trimmedToken !== trimmedAdminPassword) {
     return res.status(401).json({ error: 'Ogiltigt token' });
   }
 
