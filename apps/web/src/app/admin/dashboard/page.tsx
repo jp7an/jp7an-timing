@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { eventsApi, adminApi, setAuthToken } from '@/lib/api';
+import { eventsApi, adminApi, setAuthToken, isTokenExpired } from '@/lib/api';
 import { formatDate, getRaceModeName } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -24,26 +24,6 @@ export default function AdminDashboard() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    const token = localStorage.getItem('adminToken');
-    if (!token) {
-      router.push('/admin');
-      return;
-    }
-
-    try {
-      await adminApi.verify(token);
-      loadEvents();
-    } catch (err) {
-      setAuthToken(null);
-      router.push('/admin');
-    }
-  };
-
   const loadEvents = async () => {
     try {
       setLoading(true);
@@ -55,6 +35,34 @@ export default function AdminDashboard() {
       setLoading(false);
     }
   };
+
+  const checkAuth = useCallback(async () => {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      router.push('/admin');
+      return;
+    }
+
+    // Check if token is expired
+    if (isTokenExpired()) {
+      setAuthToken(null);
+      router.push('/admin');
+      return;
+    }
+
+    try {
+      await adminApi.verify(token);
+      loadEvents();
+    } catch (err) {
+      setAuthToken(null);
+      router.push('/admin');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const handleLogout = () => {
     setAuthToken(null);

@@ -14,14 +14,35 @@ if (typeof window !== 'undefined') {
   }
 }
 
-export const setAuthToken = (token: string | null) => {
+export const setAuthToken = (token: string | null, rememberMe: boolean = false) => {
   if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     localStorage.setItem('adminToken', token);
+    
+    // Set expiration date if remember me is enabled
+    if (rememberMe) {
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 14); // 14 days
+      localStorage.setItem('adminTokenExpiration', expirationDate.toISOString());
+    } else {
+      localStorage.removeItem('adminTokenExpiration');
+    }
   } else {
     delete api.defaults.headers.common['Authorization'];
     localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminTokenExpiration');
   }
+};
+
+export const isTokenExpired = (): boolean => {
+  const expirationDate = localStorage.getItem('adminTokenExpiration');
+  if (!expirationDate) {
+    // If no expiration is set, token is valid for the session
+    return false;
+  }
+  
+  const expiration = new Date(expirationDate);
+  return new Date() > expiration;
 };
 
 // API functions

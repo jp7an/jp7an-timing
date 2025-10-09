@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { participantsApi, adminApi, setAuthToken } from '@/lib/api';
+import { participantsApi, adminApi, setAuthToken, isTokenExpired } from '@/lib/api';
 
 interface Participant {
   id: string;
@@ -33,6 +33,13 @@ export default function ChipDistributionPage() {
   const checkAuth = useCallback(async () => {
     const token = localStorage.getItem('adminToken');
     if (!token) {
+      router.push('/admin');
+      return;
+    }
+
+    // Check if token is expired
+    if (isTokenExpired()) {
+      setAuthToken(null);
       router.push('/admin');
       return;
     }
