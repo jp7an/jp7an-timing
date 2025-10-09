@@ -90,6 +90,25 @@ Use clear, descriptive commit messages:
 - `refactor: Simplify results calculation`
 - `test: Add tests for participant registration`
 
+## Deployment Guidelines
+
+### Monorepo Structure
+
+This project uses a monorepo structure with separate deployments:
+- `apps/web` → Vercel (Frontend)
+- `apps/api` → Railway/Render (Backend)
+
+**Important**: Do NOT add `.vercelignore` files in subdirectories (`apps/web` or `apps/api`). These can interfere with Vercel's build process and cause deployment failures. The Vercel project's "Root Directory" setting (`apps/web`) is sufficient to isolate the frontend deployment.
+
+### Vercel Deployment
+
+When deploying to Vercel:
+1. Set Root Directory to `apps/web` in project settings
+2. Let Vercel auto-detect the Next.js framework
+3. Use default build/install commands
+4. Configure only environment variables (see README.md)
+5. Do NOT add `vercel.json` or `.vercelignore` files unless absolutely necessary
+
 ## Pull Request Process
 
 1. Update README.md with any new features
