@@ -168,7 +168,9 @@ npm start
 
 **Note**: This is a monorepo. Do NOT add `.vercelignore` files in subdirectories as they can interfere with the build process. The root directory setting (`apps/web`) is sufficient to isolate the frontend deployment.
 
-### Backend (Railway)
+### Backend (Railway) **← DEPLOY API HERE, NOT ON VERCEL!**
+
+⚠️ **Important**: The API backend uses Express + Socket.IO and **must NOT be deployed to Vercel**. Use Railway, Render, or any platform that supports long-running Node.js processes.
 
 1. Create a new project in Railway
 2. Connect your GitHub repository
@@ -202,7 +204,8 @@ npm start
    - Import participants from CSV if needed
 
 3. **Chip Distribution**:
-   - Use `/chiputlamning` page
+   - Login to admin first at `/admin`
+   - Use `/chiputlamning` page (requires admin authentication)
    - Search for participants
    - Assign EPC chips and bib numbers
    - USB RFID reader supported

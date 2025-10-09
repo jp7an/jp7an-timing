@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { participantsApi } from '@/lib/api';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { participantsApi, adminApi, setAuthToken } from '@/lib/api';
 
 interface Participant {
   id: string;
@@ -25,6 +26,40 @@ export default function ChipDistributionPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [authChecking, setAuthChecking] = useState(true);
+  const router = useRouter();
+
+  // Check authentication on mount
+  const checkAuth = useCallback(async () => {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      router.push('/admin');
+      return;
+    }
+
+    try {
+      await adminApi.verify(token);
+      setAuthChecking(false);
+    } catch (err) {
+      setAuthToken(null);
+      router.push('/admin');
+    }
+  }, [router]);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  // Don't render the page content until auth is checked
+  if (authChecking) {
+    return (
+      <main className="container" style={{ padding: '4rem 1rem', maxWidth: '800px' }}>
+        <div className="card">
+          <p>Kontrollerar behörighet...</p>
+        </div>
+      </main>
+    );
+  }
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
