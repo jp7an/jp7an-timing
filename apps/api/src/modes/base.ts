@@ -1,8 +1,8 @@
-import { Participant, Passage } from '@prisma/client';
+import { Participant, Passage, Prisma } from '@prisma/client';
 
 export interface RaceModeConfig {
   mode: string;
-  settings: any;
+  settings: Prisma.JsonValue;
 }
 
 export interface ParticipantResult {

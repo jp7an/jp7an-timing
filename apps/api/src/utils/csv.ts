@@ -1,4 +1,3 @@
-import { parse } from 'csv-parse/sync';
 import Papa from 'papaparse';
 import iconv from 'iconv-lite';
 
@@ -39,7 +38,7 @@ export const parseCSV = (
     }
 
     // Map to our interface
-    return result.data.map((row: any) => ({
+    return (result.data as Array<Record<string, string>>).map((row) => ({
       firstName: row['Förnamn'] || row['FirstName'] || '',
       lastName: row['Efternamn'] || row['LastName'] || '',
       email: row['E-post'] || row['Email'] || '',
@@ -66,7 +65,18 @@ const mapGender = (gender: string): 'MALE' | 'FEMALE' | 'OTHER' => {
   return 'OTHER';
 };
 
-export const generateCSV = (participants: any[]): string => {
+export const generateCSV = (participants: Array<{
+  firstName: unknown;
+  lastName: unknown;
+  email: unknown;
+  gender: unknown;
+  birthDate: unknown;
+  club?: unknown;
+  nationality?: unknown;
+  registrationNumber: unknown;
+  epc?: unknown;
+  bib?: unknown;
+}>): string => {
   const headers = [
     'Förnamn',
     'Efternamn',
@@ -85,7 +95,7 @@ export const generateCSV = (participants: any[]): string => {
     p.lastName,
     p.email,
     p.gender === 'MALE' ? 'M' : p.gender === 'FEMALE' ? 'F' : 'O',
-    new Date(p.birthDate).toISOString().split('T')[0],
+    new Date(p.birthDate as string | number | Date).toISOString().split('T')[0],
     p.club || '',
     p.nationality || 'SE',
     p.registrationNumber,

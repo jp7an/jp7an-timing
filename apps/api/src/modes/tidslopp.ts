@@ -11,8 +11,9 @@ export class TidsloppModeCalculator implements RaceModeCalculator {
     config: RaceModeConfig
   ): ParticipantResult[] {
     const results: ParticipantResult[] = [];
-    const timeLimit = config.settings?.timeLimit || 3600000; // 1 hour in ms
-    const lapDistance = config.settings?.lapDistance || 400; // meters
+    const settings = config.settings as { timeLimit?: number; lapDistance?: number } | null;
+    const timeLimit = settings?.timeLimit || 3600000; // 1 hour in ms
+    const lapDistance = settings?.lapDistance || 400; // meters
 
     for (const participant of participants) {
       const participantPassages = passages
@@ -74,7 +75,7 @@ export class TidsloppModeCalculator implements RaceModeCalculator {
     return results;
   }
 
-  validatePassage(passage: Passage, config: RaceModeConfig): boolean {
+  validatePassage(_passage: Passage, _config: RaceModeConfig): boolean {
     return true;
   }
 }

@@ -11,7 +11,8 @@ export class VarvloppModeCalculator implements RaceModeCalculator {
     config: RaceModeConfig
   ): ParticipantResult[] {
     const results: ParticipantResult[] = [];
-    const totalLaps = config.settings?.totalLaps || 10;
+    const settings = config.settings as { totalLaps?: number } | null;
+    const totalLaps = settings?.totalLaps || 10;
 
     for (const participant of participants) {
       const participantPassages = passages
@@ -74,7 +75,7 @@ export class VarvloppModeCalculator implements RaceModeCalculator {
     return results;
   }
 
-  validatePassage(passage: Passage, config: RaceModeConfig): boolean {
+  validatePassage(_passage: Passage, _config: RaceModeConfig): boolean {
     return true;
   }
 }

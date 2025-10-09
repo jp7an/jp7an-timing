@@ -12,8 +12,9 @@ export class BackyardModeCalculator implements RaceModeCalculator {
     config: RaceModeConfig
   ): ParticipantResult[] {
     const results: ParticipantResult[] = [];
-    const yardDistance = config.settings?.yardDistance || 6706; // meters
-    const yardTimeLimit = config.settings?.yardTimeLimit || 3600000; // 1 hour in ms
+    const settings = config.settings as { yardDistance?: number; yardTimeLimit?: number } | null;
+    const yardDistance = settings?.yardDistance || 6706; // meters
+    const yardTimeLimit = settings?.yardTimeLimit || 3600000; // 1 hour in ms
 
     for (const participant of participants) {
       const participantPassages = passages
@@ -74,7 +75,7 @@ export class BackyardModeCalculator implements RaceModeCalculator {
     return results;
   }
 
-  validatePassage(passage: Passage, config: RaceModeConfig): boolean {
+  validatePassage(_passage: Passage, _config: RaceModeConfig): boolean {
     return true;
   }
 }

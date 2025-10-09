@@ -8,7 +8,7 @@ export class NormalModeCalculator implements RaceModeCalculator {
   calculateResults(
     participants: Participant[],
     passages: Passage[],
-    config: RaceModeConfig
+    _config: RaceModeConfig
   ): ParticipantResult[] {
     const results: ParticipantResult[] = [];
 
@@ -64,7 +64,7 @@ export class NormalModeCalculator implements RaceModeCalculator {
     return results;
   }
 
-  validatePassage(passage: Passage, config: RaceModeConfig): boolean {
+  validatePassage(_passage: Passage, _config: RaceModeConfig): boolean {
     return true; // Basic validation
   }
 }
