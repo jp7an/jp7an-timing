@@ -14,7 +14,11 @@ export const adminAuth = (req: Request, res: Response, next: NextFunction) => {
     return res.status(500).json({ error: 'Admin-lösenord inte konfigurerat' });
   }
 
-  if (token !== adminPassword) {
+  // Trim whitespace from both tokens before comparison (consistent with admin routes)
+  const trimmedToken = token.trim();
+  const trimmedAdminPassword = adminPassword.trim();
+
+  if (trimmedToken !== trimmedAdminPassword) {
     return res.status(403).json({ error: 'Ogiltigt lösenord' });
   }
 

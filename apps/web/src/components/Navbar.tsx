@@ -28,11 +28,6 @@ export default function Navbar() {
                 </Link>
               </li>
               <li>
-                <Link href="/chiputlamning" className="navbar-link">
-                  Chiputlämning
-                </Link>
-              </li>
-              <li>
                 <Link href="/admin" className="navbar-link">
                   Admin
                 </Link>
