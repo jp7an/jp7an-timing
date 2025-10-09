@@ -157,10 +157,16 @@ npm start
 ### Frontend (Vercel)
 
 1. Connect your GitHub repository to Vercel
-2. Set the root directory to `apps/web`
-3. Configure environment variables:
+2. **Important**: In project settings, set the root directory to `apps/web`
+3. Framework Preset: Next.js (should be auto-detected)
+4. Build Command: `npm run build` (default)
+5. Output Directory: `.next` (default)
+6. Install Command: `npm install` (default)
+7. Configure environment variables:
    - `NEXT_PUBLIC_API_URL` - Your backend API URL
-4. Deploy automatically on push to main
+8. Deploy automatically on push to main
+
+**Note**: This is a monorepo. Do NOT add `.vercelignore` files in subdirectories as they can interfere with the build process. The root directory setting (`apps/web`) is sufficient to isolate the frontend deployment.
 
 ### Backend (Railway)
 
