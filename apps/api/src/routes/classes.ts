@@ -1,11 +1,11 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { prisma } from '../config/prisma';
 import { adminAuth } from '../middleware/auth';
 
 const router = Router();
 
 // Get classes for an event
-router.get('/event/:eventId', async (req, res) => {
+router.get('/event/:eventId', async (req: Request, res: Response) => {
   try {
     const classes = await prisma.class.findMany({
       where: {
@@ -28,7 +28,7 @@ router.get('/event/:eventId', async (req, res) => {
 });
 
 // Create class (admin only)
-router.post('/', adminAuth, async (req, res) => {
+router.post('/', adminAuth, async (req: Request, res: Response) => {
   try {
     const { eventId, name, description, minAge, maxAge, gender } = req.body;
 
@@ -55,7 +55,7 @@ router.post('/', adminAuth, async (req, res) => {
 });
 
 // Update class (admin only)
-router.put('/:id', adminAuth, async (req, res) => {
+router.put('/:id', adminAuth, async (req: Request, res: Response) => {
   try {
     const { name, description, minAge, maxAge, gender } = req.body;
 
@@ -80,7 +80,7 @@ router.put('/:id', adminAuth, async (req, res) => {
 });
 
 // Delete class (admin only)
-router.delete('/:id', adminAuth, async (req, res) => {
+router.delete('/:id', adminAuth, async (req: Request, res: Response) => {
   try {
     await prisma.class.delete({
       where: {

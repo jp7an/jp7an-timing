@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import http from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 // Import routes
 import eventsRouter from './routes/events';
@@ -44,7 +44,7 @@ app.use('/api/results', resultsRouter);
 app.use('/api/admin', adminRouter);
 
 // Socket.IO for real-time updates
-io.on('connection', (socket) => {
+io.on('connection', (socket: Socket) => {
   console.log('Client connected:', socket.id);
 
   socket.on('join-event', (eventSlug: string) => {
