@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const pathname = usePathname();
-  const isAdmin = pathname?.startsWith('/admin');
+  const isAdmin = pathname?.startsWith('/admin') || pathname?.startsWith('/chiputlamning');
 
   return (
     <nav className="navbar">
@@ -38,13 +38,23 @@ export default function Navbar() {
           {isAdmin && (
             <ul className="navbar-nav">
               <li>
-                <Link href="/admin" className="navbar-link">
-                  Dashboard
+                <Link href="/admin/dashboard" className="navbar-link">
+                  📋 Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link href="/admin/events/new" className="navbar-link">
+                  ➕ Nytt event
+                </Link>
+              </li>
+              <li>
+                <Link href="/chiputlamning" className="navbar-link">
+                  🏷️ Chiputlämning
                 </Link>
               </li>
               <li>
                 <Link href="/" className="navbar-link">
-                  Till webbplatsen
+                  🏠 Startsida
                 </Link>
               </li>
             </ul>
