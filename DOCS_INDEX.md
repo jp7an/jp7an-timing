@@ -22,6 +22,13 @@ Detta dokument hjälper dig att hitta rätt guide för ditt behov.
 - Lösningar på vanliga problem
 - Snabba fixes
 
+### Problem: Render deployment TypeScript-fel
+**→ Börja här:** [RENDER_DEPLOYMENT_VERIFICATION.md](./RENDER_DEPLOYMENT_VERIFICATION.md) ⭐
+- Steg-för-steg verifiering av Render-konfiguration
+- Kontrollera devDependencies
+- Root Directory inställningar
+- .gitignore konfiguration
+
 ## 📖 Huvuddokumentation
 
 ### [README.md](./README.md) ⭐ START HÄR
@@ -62,6 +69,15 @@ Detta dokument hjälper dig att hitta rätt guide för ditt behov.
 - Autentiseringsproblem
 - Database connection issues
 - CORS-problem
+- Render TypeScript build-fel
+
+### [RENDER_DEPLOYMENT_VERIFICATION.md](./RENDER_DEPLOYMENT_VERIFICATION.md)
+**Render Deployment Verifieringschecklista**
+- Steg-för-steg verifiering av Render-konfiguration
+- devDependencies kontroll
+- Root Directory inställningar
+- Build & Start Commands
+- .gitignore verifiering
 
 ## 📁 Projektstruktur
 
@@ -75,6 +91,7 @@ jp7an-timing/
 ├── DEPLOYMENT_CHECKLIST.md
 ├── TROUBLESHOOTING.md
 ├── CONTRIBUTING.md
+├── RENDER_DEPLOYMENT_VERIFICATION.md
 └── DOCS_INDEX.md     # Detta dokument
 ```
 
@@ -282,6 +299,7 @@ Välj baserat på din situation:
 |-------------|-----------------|
 | Se ursprungsplanen | [ORIGINAL_PLAN.md](./ORIGINAL_PLAN.md) |
 | Lösa "Kunde inte skapa evenemang" | [QUICKFIX.md](./QUICKFIX.md) |
+| Verifiera Render deployment | [RENDER_DEPLOYMENT_VERIFICATION.md](./RENDER_DEPLOYMENT_VERIFICATION.md) |
 | Deploya systemet | [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) |
 | Testa systemet | [TEST_PROTOCOL.md](./TEST_PROTOCOL.md) |
 | Felsöka ett problem | [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) |
