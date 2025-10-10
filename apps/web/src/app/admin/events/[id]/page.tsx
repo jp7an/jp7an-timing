@@ -42,7 +42,7 @@ export default function EditEvent() {
       setLoading(true);
       // Get event by ID - we need to get all events and find by ID
       // since the API only has getBySlug
-      const response = await eventsApi.getAll();
+      const response = await eventsApi.getAll(true); // Include all events for admin
       const foundEvent = response.data.find((e: Event) => e.id === eventId);
       
       if (!foundEvent) {

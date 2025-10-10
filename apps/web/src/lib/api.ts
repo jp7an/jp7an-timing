@@ -52,7 +52,7 @@ export const adminApi = {
 };
 
 export const eventsApi = {
-  getAll: () => api.get('/api/events'),
+  getAll: (includeAll: boolean = false) => api.get('/api/events', { params: { all: includeAll } }),
   getBySlug: (slug: string) => api.get(`/api/events/${slug}`),
   create: (data: any) => api.post('/api/events', data),
   update: (id: string, data: any) => api.put(`/api/events/${id}`, data),
