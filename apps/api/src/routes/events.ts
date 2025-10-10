@@ -1,11 +1,11 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { prisma } from '../config/prisma';
 import { adminAuth } from '../middleware/auth';
 
 const router = Router();
 
 // Get all events (public)
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     // Allow fetching all events (including inactive) with ?all=true query parameter
     const includeAll = req.query.all === 'true';
@@ -48,7 +48,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get event by slug (public)
-router.get('/:slug', async (req, res) => {
+router.get('/:slug', async (req: Request, res: Response) => {
   try {
     const event = await prisma.event.findUnique({
       where: {
@@ -71,7 +71,7 @@ router.get('/:slug', async (req, res) => {
 });
 
 // Create event (admin only)
-router.post('/', adminAuth, async (req, res) => {
+router.post('/', adminAuth, async (req: Request, res: Response) => {
   try {
     const { name, slug, description, mode, date, location, modeSettings } = req.body;
 
@@ -132,7 +132,7 @@ router.post('/', adminAuth, async (req, res) => {
 });
 
 // Update event (admin only)
-router.put('/:id', adminAuth, async (req, res) => {
+router.put('/:id', adminAuth, async (req: Request, res: Response) => {
   try {
     const { name, description, mode, date, location, modeSettings, isActive } = req.body;
 
@@ -174,7 +174,7 @@ router.put('/:id', adminAuth, async (req, res) => {
 });
 
 // Delete event (admin only)
-router.delete('/:id', adminAuth, async (req, res) => {
+router.delete('/:id', adminAuth, async (req: Request, res: Response) => {
   try {
     await prisma.event.delete({
       where: {
@@ -190,7 +190,7 @@ router.delete('/:id', adminAuth, async (req, res) => {
 });
 
 // Reset event (admin only)
-router.post('/:id/reset', adminAuth, async (req, res) => {
+router.post('/:id/reset', adminAuth, async (req: Request, res: Response) => {
   try {
     const eventId = req.params.id;
 

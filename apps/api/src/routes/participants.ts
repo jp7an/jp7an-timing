@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import { prisma } from '../config/prisma';
 import { adminAuth } from '../middleware/auth';
@@ -28,7 +28,7 @@ const generateRegistrationNumber = async (): Promise<string> => {
 };
 
 // Get participants for an event
-router.get('/event/:eventId', async (req, res) => {
+router.get('/event/:eventId', async (req: Request, res: Response) => {
   try {
     const participants = await prisma.participant.findMany({
       where: {
@@ -50,7 +50,7 @@ router.get('/event/:eventId', async (req, res) => {
 });
 
 // Get single participant
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req: Request, res: Response) => {
   try {
     const participant = await prisma.participant.findUnique({
       where: {
@@ -79,7 +79,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Search participants by EPC or Bib (admin only for chip distribution)
-router.get('/search/:query', adminAuth, async (req, res) => {
+router.get('/search/:query', adminAuth, async (req: Request, res: Response) => {
   try {
     const query = req.params.query;
     
@@ -108,7 +108,7 @@ router.get('/search/:query', adminAuth, async (req, res) => {
 });
 
 // Register participant (public)
-router.post('/register', async (req, res) => {
+router.post('/register', async (req: Request, res: Response) => {
   try {
     const {
       eventId,
@@ -197,7 +197,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Create participant (admin only)
-router.post('/', adminAuth, async (req, res) => {
+router.post('/', adminAuth, async (req: Request, res: Response) => {
   try {
     const {
       eventId,
@@ -271,7 +271,7 @@ router.post('/', adminAuth, async (req, res) => {
 });
 
 // Update participant (admin only)
-router.put('/:id', adminAuth, async (req, res) => {
+router.put('/:id', adminAuth, async (req: Request, res: Response) => {
   try {
     const {
       classId,
@@ -339,7 +339,7 @@ router.put('/:id', adminAuth, async (req, res) => {
 });
 
 // Delete participant (admin only)
-router.delete('/:id', adminAuth, async (req, res) => {
+router.delete('/:id', adminAuth, async (req: Request, res: Response) => {
   try {
     await prisma.participant.delete({
       where: {
@@ -355,7 +355,7 @@ router.delete('/:id', adminAuth, async (req, res) => {
 });
 
 // Import participants from CSV (admin only)
-router.post('/import', adminAuth, upload.single('file'), async (req, res) => {
+router.post('/import', adminAuth, upload.single('file'), async (req: Request, res: Response) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'Ingen fil uppladdad' });
@@ -438,7 +438,7 @@ router.post('/import', adminAuth, upload.single('file'), async (req, res) => {
 });
 
 // Export participants to CSV (admin only)
-router.get('/export/:eventId', adminAuth, async (req, res) => {
+router.get('/export/:eventId', adminAuth, async (req: Request, res: Response) => {
   try {
     const participants = await prisma.participant.findMany({
       where: {
@@ -461,7 +461,7 @@ router.get('/export/:eventId', adminAuth, async (req, res) => {
 });
 
 // Auto-assign EPC (admin only)
-router.post('/:id/assign-epc', adminAuth, async (req, res) => {
+router.post('/:id/assign-epc', adminAuth, async (req: Request, res: Response) => {
   try {
     const { epc } = req.body;
 
