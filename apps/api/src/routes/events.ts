@@ -94,9 +94,14 @@ router.post('/', adminAuth, async (req, res) => {
     });
 
     res.status(201).json(event);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating event:', error);
-    res.status(500).json({ error: 'Kunde inte skapa evenemang' });
+    // Provide more detailed error information
+    const errorMessage = error?.message || 'Kunde inte skapa evenemang';
+    res.status(500).json({ 
+      error: 'Kunde inte skapa evenemang',
+      details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+    });
   }
 });
 
