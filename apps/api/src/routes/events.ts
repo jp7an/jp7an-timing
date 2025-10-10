@@ -28,9 +28,22 @@ router.get('/', async (req, res) => {
     });
 
     res.json(events);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching events:', error);
-    res.status(500).json({ error: 'Kunde inte hämta evenemang' });
+    
+    const err = error as Error;
+    let errorMessage = 'Kunde inte hämta evenemang';
+    let details = err?.message || '';
+    
+    if (err?.message?.includes("Can't reach database server")) {
+      errorMessage = 'Kunde inte ansluta till databasen';
+      details = 'Kontrollera att DATABASE_URL är korrekt konfigurerad';
+    }
+    
+    res.status(500).json({ 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? details : undefined
+    });
   }
 });
 
@@ -94,13 +107,26 @@ router.post('/', adminAuth, async (req, res) => {
     });
 
     res.status(201).json(event);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating event:', error);
+    
+    const err = error as Error & { code?: string };
     // Provide more detailed error information
-    const errorMessage = error?.message || 'Kunde inte skapa evenemang';
+    let errorMessage = 'Kunde inte skapa evenemang';
+    let details = err?.message || '';
+    
+    // Check for common error types
+    if (err?.message?.includes("Can't reach database server")) {
+      errorMessage = 'Kunde inte ansluta till databasen';
+      details = 'Kontrollera att DATABASE_URL är korrekt konfigurerad';
+    } else if (err?.code === 'P2002') {
+      errorMessage = 'Ett evenemang med denna slug finns redan';
+      details = 'Välj en annan slug';
+    }
+    
     res.status(500).json({ 
-      error: 'Kunde inte skapa evenemang',
-      details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? details : undefined
     });
   }
 });
