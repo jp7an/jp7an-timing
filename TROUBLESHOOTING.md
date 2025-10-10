@@ -220,6 +220,109 @@ console.log(process.env.NEXT_PUBLIC_API_URL)
 5. Kopiera 16-siffrig kod (utan mellanslag)
 6. Använd som SMTP_PASSWORD
 
+## 🔴 Problem: Render deployment misslyckas med TypeScript-fel
+
+### Symptom
+- Render build loggar visar "Cannot find module '@types/express'" eller liknande
+- Build command körs men TypeScript-kompileringen misslyckas
+- DevDependencies verkar inte installeras
+
+### Diagnos: Steg-för-steg verifiering
+
+**Steg 1: Kontrollera devDependencies i apps/api/package.json**
+
+Öppna `apps/api/package.json` och verifiera att ALLA dessa finns i `devDependencies`:
+
+```json
+"devDependencies": {
+  "@types/express": "^4.17.23",
+  "@types/papaparse": "^5.3.16",
+  "@types/nodemailer": "^7.0.2",
+  "@types/qrcode": "^1.5.5",
+  "@types/multer": "^2.0.0"
+}
+```
+
+**Viktigt:** Dessa MÅSTE vara i `devDependencies`, inte i `dependencies`!
+
+**Steg 2: Kontrollera Render Root Directory-inställning**
+
+1. Gå till Render Dashboard → Din Web Service
+2. Klicka på "Settings"
+3. Hitta "Root Directory"
+4. **Måste vara:** `apps/api`
+5. **INTE:** tom/root/annat
+
+Detta säkerställer att Render kör `npm install` i rätt mapp!
+
+**Steg 3: Kontrollera Build Command**
+
+I Render Settings:
+- **Build Command:** `npm install && npm run build`
+- Detta installerar ALLA dependencies (inklusive devDependencies)
+- Sedan kompilerar TypeScript med `tsc`
+
+**Steg 4: Kontrollera .gitignore**
+
+Verifiera att `.gitignore` innehåller:
+```
+node_modules/
+```
+
+**OBS:** 
+- SKA ignorera `node_modules/` (utan ! eller annat)
+- SKA INTE ignorera `package.json` eller `package-lock.json`
+- Dessa filer MÅSTE vara committade till Git!
+
+**Steg 5: Verifiera att package-lock.json är committad**
+
+```bash
+git ls-files apps/api/package-lock.json
+```
+
+Om filen INTE finns i Git:
+```bash
+cd apps/api
+git add package-lock.json
+git commit -m "Add package-lock.json for reproducible builds"
+git push
+```
+
+### Lösning: Komplett Render-konfiguration
+
+**Settings → Build & Deploy:**
+```
+Root Directory:      apps/api
+Build Command:       npm install && npm run build
+Start Command:       npm start
+```
+
+**Settings → Environment:**
+```
+NODE_ENV=production
+DATABASE_URL=postgresql://...
+ADMIN_PASSWORD=...
+GATEWAY_HMAC_SECRET=...
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=...
+SMTP_PASSWORD=...
+EMAIL_FROM=...
+FRONTEND_URL=https://your-app.vercel.app
+```
+
+### Vanliga misstag
+
+❌ **Root Directory är tom** → `npm install` körs i projektroten, hittar inte package.json
+❌ **Root Directory är `/apps/api`** med leading slash → Kan orsaka problem
+✅ **Root Directory är `apps/api`** utan leading slash → Korrekt!
+
+❌ **Build Command saknar `npm install`** → DevDependencies installeras inte
+✅ **Build Command är `npm install && npm run build`** → Korrekt!
+
+❌ **package-lock.json är ignorerad i .gitignore** → Inkonsistenta versioner
+✅ **package-lock.json är committad** → Reproducerbara builds
+
 ## 📋 Snabb checklista när något går fel
 
 Gå igenom denna lista i ordning:
@@ -253,6 +356,12 @@ Gå igenom denna lista i ordning:
 - [ ] FRONTEND_URL i backend matchar exakt Vercel URL
 - [ ] Inkluderar https://
 - [ ] Ingen trailing slash
+
+### 7. Render-specifik (om du använder Render)
+- [ ] Root Directory = `apps/api`
+- [ ] Build Command = `npm install && npm run build`
+- [ ] Alla @types/ packages finns i devDependencies
+- [ ] package-lock.json är committad till Git
 
 ## 🆘 När allt annat misslyckas
 
