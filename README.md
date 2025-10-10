@@ -147,6 +147,25 @@ npm start
 
 ## Deployment
 
+⚠️ **VIKTIGT: Systemet ska köras på webben, inte localhost i produktion!**
+
+Se detaljerad deployment-guide i:
+- **[DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)** - Steg-för-steg deployment guide
+- **[TEST_PROTOCOL.md](./TEST_PROTOCOL.md)** - Testning och felsökning
+
+### Snabbstart: Nödvändig konfiguration
+
+#### Miljövariabler som MÅSTE konfigureras:
+
+**Backend (Railway/Render):**
+- `DATABASE_URL` - PostgreSQL från Neon
+- `ADMIN_PASSWORD` - Ditt admin-lösenord
+- `FRONTEND_URL` - Din Vercel URL (**INTE localhost!**)
+- Alla SMTP-variabler för email
+
+**Frontend (Vercel):**
+- `NEXT_PUBLIC_API_URL` - Din Railway/Render URL (**INTE localhost!**)
+
 ### Database Setup (Neon)
 
 1. Create a Neon PostgreSQL database at https://neon.tech
@@ -385,6 +404,30 @@ npm test
 cd apps/api
 npm test
 ```
+
+## Troubleshooting
+
+### "Kunde inte skapa evenemang" (Cannot create event)
+
+This error usually indicates a configuration issue. Check:
+
+1. **Backend logs** - Look for detailed error messages
+2. **Environment variables** - Ensure all are set correctly:
+   - `DATABASE_URL` must be valid PostgreSQL connection
+   - `ADMIN_PASSWORD` must be configured
+   - In production: `FRONTEND_URL` must match your Vercel deployment
+3. **Frontend configuration**:
+   - `NEXT_PUBLIC_API_URL` must point to your deployed backend (not localhost in production!)
+4. **Database connection** - Run `npx prisma db push` to ensure database is accessible
+
+For detailed troubleshooting, see [TEST_PROTOCOL.md](./TEST_PROTOCOL.md).
+
+### CORS Errors
+
+If you see CORS errors in browser console:
+- Verify `FRONTEND_URL` in backend matches your Vercel URL exactly
+- Include `https://` protocol
+- No trailing slash
 
 ## CI/CD
 

@@ -77,7 +77,10 @@ export default function NewEvent() {
 
       router.push('/admin/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Kunde inte skapa evenemang');
+      console.error('Error creating event:', err);
+      const errorMsg = err.response?.data?.error || 'Kunde inte skapa evenemang';
+      const errorDetails = err.response?.data?.details;
+      setError(errorDetails ? `${errorMsg}: ${errorDetails}` : errorMsg);
     } finally {
       setLoading(false);
     }
