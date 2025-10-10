@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { eventsApi, adminApi, setAuthToken, isTokenExpired } from '@/lib/api';
+import { eventsApi, adminApi, setAuthToken } from '@/lib/api';
 import Link from 'next/link';
 
 interface Event {
@@ -76,13 +76,6 @@ export default function EditEvent() {
   const checkAuth = useCallback(async () => {
     const token = localStorage.getItem('adminToken');
     if (!token) {
-      router.push('/admin');
-      return;
-    }
-
-    // Check if token is expired
-    if (isTokenExpired()) {
-      setAuthToken(null);
       router.push('/admin');
       return;
     }

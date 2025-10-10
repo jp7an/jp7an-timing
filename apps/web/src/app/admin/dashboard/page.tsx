@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { eventsApi, adminApi, setAuthToken, isTokenExpired } from '@/lib/api';
+import { eventsApi, adminApi, setAuthToken } from '@/lib/api';
 import { formatDate, getRaceModeName } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -39,13 +39,6 @@ export default function AdminDashboard() {
   const checkAuth = useCallback(async () => {
     const token = localStorage.getItem('adminToken');
     if (!token) {
-      router.push('/admin');
-      return;
-    }
-
-    // Check if token is expired
-    if (isTokenExpired()) {
-      setAuthToken(null);
       router.push('/admin');
       return;
     }
