@@ -2,6 +2,8 @@
 
 Detta dokument sammanfattar vad som har gjorts och vad du behöver göra härnäst.
 
+📘 **[ORIGINAL_PLAN.md](./ORIGINAL_PLAN.md)** - Se ursprungsplanen för hela systemet
+
 ## ✅ Vad som har fixats
 
 ### Problem 1: "Kunde inte skapa evenemang"

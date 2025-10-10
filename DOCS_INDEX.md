@@ -32,6 +32,7 @@ Detta dokument hjälper dig att hitta rätt guide för ditt behov.
 | Dokument | Storlek | Användning | Prioritet |
 |----------|---------|------------|-----------|
 | [README.md](./README.md) | 12KB | Översikt och grundläggande setup | ⭐⭐⭐ |
+| [ORIGINAL_PLAN.md](./ORIGINAL_PLAN.md) | 19KB | Ursprungsplan för hela systemet | ⭐⭐⭐ |
 | [QUICKFIX.md](./QUICKFIX.md) | 7.4KB | Snabb lösning av "Kunde inte skapa evenemang" | ⭐⭐⭐ |
 | [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) | 9.8KB | Steg-för-steg deployment guide | ⭐⭐⭐ |
 | [TEST_PROTOCOL.md](./TEST_PROTOCOL.md) | 11KB | Test och verifiering | ⭐⭐⭐ |
@@ -88,7 +89,7 @@ Har du ett problem?
            |   → TEST_PROTOCOL.md
            |
            ├─ Förstå systemet
-           |   → README.md
+           |   → README.md + ORIGINAL_PLAN.md
            |
            └─ Bidra till projektet
                → CONTRIBUTING.md
@@ -210,6 +211,7 @@ Välj baserat på din situation:
 
 | Jag vill... | Läs denna guide |
 |-------------|-----------------|
+| Se ursprungsplanen | [ORIGINAL_PLAN.md](./ORIGINAL_PLAN.md) |
 | Lösa "Kunde inte skapa evenemang" | [QUICKFIX.md](./QUICKFIX.md) |
 | Deploya systemet | [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) |
 | Testa systemet | [TEST_PROTOCOL.md](./TEST_PROTOCOL.md) |

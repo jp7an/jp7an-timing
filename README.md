@@ -2,6 +2,8 @@
 
 Modern timing system for running events with support for multiple race modes (Normal, Backyard, Varvlopp, Tidslopp).
 
+📘 **[Se ursprungsplanen för hela systemet](./ORIGINAL_PLAN.md)** - Komplett översikt av vision, arkitektur och implementering.
+
 ## Features
 
 ### Race Modes
