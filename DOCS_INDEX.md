@@ -4,14 +4,11 @@ Detta dokument hjälper dig att hitta rätt guide för ditt behov.
 
 ## 🚨 HAR DU ETT PROBLEM? START HÄR!
 
-### Problem: "Kunde inte skapa evenemang"
-**→ Börja här:** [QUICKFIX.md](./QUICKFIX.md) ⭐ (5-10 min)
-- Snabb diagnos baserat på felmeddelande
-- Steg-för-steg lösningar
-- Verifiering
-
-**Om QUICKFIX inte löser det:**
-→ [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) (Detaljerad felsökning)
+### Problem: Vill testa systemet
+**→ Börja här:** [NYTT_TESTPROTOKOLL.md](./NYTT_TESTPROTOKOLL.md) ⭐
+- Enkelt och tydligt testprotokoll
+- Steg-för-steg instruktioner
+- Lätt att ge feedback
 
 ### Problem: Deployment fungerar inte
 **→ Börja här:** [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) ⭐
@@ -19,15 +16,87 @@ Detta dokument hjälper dig att hitta rätt guide för ditt behov.
 - Miljövariabler checklista
 - Verifiering
 
-### Problem: Vill testa systemet
-**→ Börja här:** [TEST_PROTOCOL.md](./TEST_PROTOCOL.md) ⭐
-- Lokal testning
-- Produktionstestning
-- Alla funktioner
+### Problem: Vanliga produktionsproblem
+**→ Börja här:** [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
+- Detaljerad felsökning
+- Lösningar på vanliga problem
+- Snabba fixes
 
-## 📖 Dokumentationsguider
+## 📖 Huvuddokumentation
 
-### Huvuddokumentation (LÄS DESSA)
+### [README.md](./README.md) ⭐ START HÄR
+**Den officiella dokumentationen**
+- Översikt över projektet
+- Installation och setup
+- Lokal utveckling
+- Deployment-instruktioner
+- Arkitektur
+
+### [CONTRIBUTING.md](./CONTRIBUTING.md)
+**För utvecklare som vill bidra**
+- Kodstil och riktlinjer
+- Hur man bidrar till projektet
+- Pull request process
+
+### [NYTT_TESTPROTOKOLL.md](./NYTT_TESTPROTOKOLL.md) ⭐ NYA TESTPROTOKOLLET
+**Enkelt och tydligt testprotokoll**
+- Permanent inloggning tests
+- Admin dashboard tests
+- Evenemangsfunktionalitet tests
+- Användarvänlighet och feedback
+
+## 🛠️ Teknisk dokumentation
+
+### [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
+**Komplett deployment-guide**
+- Backend deployment (Railway/Render)
+- Frontend deployment (Vercel)
+- Databas setup (Neon)
+- Miljövariabler
+- Verifiering
+
+### [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
+**Felsökningsguide**
+- Vanliga produktionsproblem
+- "Kunde inte skapa evenemang"
+- Autentiseringsproblem
+- Database connection issues
+- CORS-problem
+
+## 📁 Projektstruktur
+
+```
+jp7an-timing/
+├── apps/
+│   ├── api/          # Backend Express API
+│   └── web/          # Frontend Next.js
+├── README.md         # Huvuddokumentation
+├── NYTT_TESTPROTOKOLL.md  # Testprotokoll
+├── DEPLOYMENT_CHECKLIST.md
+├── TROUBLESHOOTING.md
+├── CONTRIBUTING.md
+└── DOCS_INDEX.md     # Detta dokument
+```
+
+## 🔄 Senaste ändringar
+
+**Denna PR:**
+- ✅ Permanent inloggning (ingen expiration längre)
+- ✅ Förbättrad admin dashboard UI
+- ✅ Nytt enkelt testprotokoll
+- ✅ Städat bort 17 utdaterade dokumentationsfiler
+
+## 📞 Behöver du hjälp?
+
+1. **Kolla README.md först**
+2. **Leta i TROUBLESHOOTING.md** för vanliga problem
+3. **Använd NYTT_TESTPROTOKOLL.md** för att testa
+4. **Skapa ett issue** på GitHub om du fortfarande har problem
+
+---
+
+**Senast uppdaterad:** 2025-10-10
+
 
 | Dokument | Storlek | Användning | Prioritet |
 |----------|---------|------------|-----------|
