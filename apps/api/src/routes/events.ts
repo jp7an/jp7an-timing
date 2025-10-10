@@ -7,8 +7,11 @@ const router = Router();
 // Get all events (public)
 router.get('/', async (req, res) => {
   try {
+    // Allow fetching all events (including inactive) with ?all=true query parameter
+    const includeAll = req.query.all === 'true';
+    
     const events = await prisma.event.findMany({
-      where: {
+      where: includeAll ? {} : {
         isActive: true,
       },
       include: {

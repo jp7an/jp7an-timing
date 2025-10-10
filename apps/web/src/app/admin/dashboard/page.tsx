@@ -27,7 +27,7 @@ export default function AdminDashboard() {
   const loadEvents = async () => {
     try {
       setLoading(true);
-      const response = await eventsApi.getAll();
+      const response = await eventsApi.getAll(true); // Include all events for admin dashboard
       setEvents(response.data);
     } catch (err) {
       setError('Kunde inte ladda evenemang');
