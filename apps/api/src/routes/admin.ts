@@ -1,9 +1,9 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 
 const router = Router();
 
 // Admin login
-router.post('/login', (req, res) => {
+router.post('/login', (req: Request, res: Response) => {
   const { password } = req.body;
   const adminPassword = process.env.ADMIN_PASSWORD;
 
@@ -27,7 +27,7 @@ router.post('/login', (req, res) => {
 });
 
 // Verify token
-router.post('/verify', (req, res) => {
+router.post('/verify', (req: Request, res: Response) => {
   const { token } = req.body;
   const adminPassword = process.env.ADMIN_PASSWORD;
 

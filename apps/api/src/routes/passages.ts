@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { prisma } from '../config/prisma';
 import { adminAuth } from '../middleware/auth';
 import { verifyHMAC } from '../middleware/hmac';
@@ -6,7 +6,7 @@ import { verifyHMAC } from '../middleware/hmac';
 const router = Router();
 
 // Get passages for an event
-router.get('/event/:eventId', async (req, res) => {
+router.get('/event/:eventId', async (req: Request, res: Response) => {
   try {
     const passages = await prisma.passage.findMany({
       where: {
@@ -36,7 +36,7 @@ router.get('/event/:eventId', async (req, res) => {
 });
 
 // Get passages for a participant
-router.get('/participant/:participantId', async (req, res) => {
+router.get('/participant/:participantId', async (req: Request, res: Response) => {
   try {
     const passages = await prisma.passage.findMany({
       where: {
@@ -55,7 +55,7 @@ router.get('/participant/:participantId', async (req, res) => {
 });
 
 // Create passage from gateway (with HMAC verification)
-router.post('/gateway', verifyHMAC, async (req, res) => {
+router.post('/gateway', verifyHMAC, async (req: Request, res: Response) => {
   try {
     const { epc, timestamp, checkpoint, readerInfo } = req.body;
 
@@ -93,7 +93,7 @@ router.post('/gateway', verifyHMAC, async (req, res) => {
 });
 
 // Create passage manually (admin only)
-router.post('/', adminAuth, async (req, res) => {
+router.post('/', adminAuth, async (req: Request, res: Response) => {
   try {
     const { eventId, participantId, epc, timestamp, checkpoint, lapNumber } = req.body;
 
@@ -141,7 +141,7 @@ router.post('/', adminAuth, async (req, res) => {
 });
 
 // Update passage (admin only)
-router.put('/:id', adminAuth, async (req, res) => {
+router.put('/:id', adminAuth, async (req: Request, res: Response) => {
   try {
     const { timestamp, checkpoint, lapNumber, isValid, invalidReason } = req.body;
 
@@ -166,7 +166,7 @@ router.put('/:id', adminAuth, async (req, res) => {
 });
 
 // Delete passage (admin only)
-router.delete('/:id', adminAuth, async (req, res) => {
+router.delete('/:id', adminAuth, async (req: Request, res: Response) => {
   try {
     const passage = await prisma.passage.findUnique({
       where: { id: req.params.id },

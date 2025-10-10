@@ -1,11 +1,11 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { prisma } from '../config/prisma';
 import { getModeCalculator } from '../modes';
 
 const router = Router();
 
 // Get results for an event
-router.get('/event/:eventSlug', async (req, res) => {
+router.get('/event/:eventSlug', async (req: Request, res: Response) => {
   try {
     const event = await prisma.event.findUnique({
       where: {
@@ -61,7 +61,7 @@ router.get('/event/:eventSlug', async (req, res) => {
 });
 
 // Get results by class
-router.get('/event/:eventSlug/class/:className', async (req, res) => {
+router.get('/event/:eventSlug/class/:className', async (req: Request, res: Response) => {
   try {
     const event = await prisma.event.findUnique({
       where: {
@@ -127,7 +127,7 @@ router.get('/event/:eventSlug/class/:className', async (req, res) => {
 });
 
 // Get participant result details
-router.get('/participant/:participantId', async (req, res) => {
+router.get('/participant/:participantId', async (req: Request, res: Response) => {
   try {
     const participant = await prisma.participant.findUnique({
       where: {
